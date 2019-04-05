@@ -17,7 +17,7 @@ const features = [
     {name: "ExterCond", value: "", type: "dropdown", description: "Evaluates the present condition of the material on the exterior"},
     {name: "Foundation", value: "", type: "dropdown", description: "Type of foundation"},
     {name: "GrLivArea", value: "", type: "number", description: "Above grade (ground) living area square feet"},
-    // {name: "FullBath", value: "", type: "boolean", description: "Full bathrooms above grade"},
+    {name: "FullBath", value: "", type: "number", description: "Full bathrooms above grade"},
     // {name: "BedroomAbvGr", value: "", type: "", description: ""}, 
     // {name: "KitchenAbvGr", value: "", type: "", description: ""},
     {name: "KitchenQual", value: "", type: "dropdown", description: "Kitchen quality"},
