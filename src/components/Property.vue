@@ -23,6 +23,8 @@
 </template>
 
 <script>
+import featuresKeyValue from './featuresKeyValue'; 
+console.log('=== ===', featuresKeyValue);
 import AddProperty from './AddProperty';
 import ViewProperty from './ViewProperty';
 export default {

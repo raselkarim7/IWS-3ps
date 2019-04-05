@@ -42,7 +42,6 @@ export default {
                 formvalues[this.features[i].name] = this.features[i].value
             }
             console.log(formvalues);
-            
             // alert(JSON.stringify(this.features));
         },
         handleChange(event) {
