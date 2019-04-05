@@ -24,7 +24,7 @@
 
 <script>
 import featuresKeyValue from './featuresKeyValue'; 
-console.log('=== ===', featuresKeyValue);
+console.log('Property.vue, featuresKeyValue === ===', featuresKeyValue);
 import AddProperty from './AddProperty';
 import ViewProperty from './ViewProperty';
 export default {
