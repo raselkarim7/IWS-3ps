@@ -48,8 +48,11 @@
 </template>
 
 <script>
+import _ from 'lodash';
 import features from '../features';
 import featuresKeyValue from '../featuresKeyValue';
+import pythonMapValue from '../pythonMapValue';
+console.log('python map value === ', pythonMapValue);
 // console.log('featuresKeyValue === ', featuresKeyValue, featuresKeyValue['MSSubClass']);
 export default {
     name: 'AddProperty',
@@ -58,18 +61,51 @@ export default {
             optKey: 0,
             features: features,
             featuresKeyValue: featuresKeyValue, 
+            pythonMapValue: pythonMapValue,
             LotFrontage: '555',
         }
     }, 
     methods: {
         onSubmit() {
-            console.log('on Submit called.', this.$vnode );
+            //console.log('on Submit called.', this.$vnode );
             const formvalues = {};
+            //const formValuesPlainArray = [];
             for (let i = 0; i < this.features.length; i++) {
                 formvalues[this.features[i].name] = this.features[i].value
+                //formValuesPlainArray[i] = isNaN(this.features[i].value) ? this.features[i].value : parseInt( this.features[i].value)
             }
-            console.log(formvalues);
+            //console.log('======', this.pythonMapValue['MSZoning'] );
+            //console.log(Object.prototype.hasOwnProperty.call( this.pythonMapValue, 'MSZoning'))
+            //console.log(formValuesPlainArray);
             // alert(JSON.stringify(this.features));
+            const finalValues = {};
+            _.map(formvalues, (fv, key)  => {
+                 //console.log(key, fv)
+                if (Object.prototype.hasOwnProperty.call( this.pythonMapValue, key)) {
+                    if (Object.prototype.hasOwnProperty.call( this.pythonMapValue[key], fv)) {
+                        finalValues[key] = this.pythonMapValue[key][fv];
+                    } else {
+                        finalValues[key] = fv;
+                    }
+                 } else {
+                     finalValues[key] = fv;
+                 }
+                });
+            console.log('FORMvalues : ', formvalues);
+            console.log('FinalValues --->', finalValues, _.size(finalValues));
+            
+
+
+            const FinalOutput = [];
+            let i = 0;
+            _.map(finalValues, fv => {
+                   // console.log(fv);
+                    FinalOutput[i] = isNaN(fv) ? 3 : parseInt( fv)
+                    i++;
+            });
+
+            console.log('Final Output ===> ', FinalOutput);
+
         },
         handleChange(event) {
             // console.log('Inside handle change, ', event, event.target.value, event.target.name);
