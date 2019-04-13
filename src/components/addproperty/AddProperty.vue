@@ -9,27 +9,40 @@
                     <div v-for="feature in features" :key="feature.name" class="form-group px-5  mb-4 col-sm-6">
 
                         <div v-if="feature.type==='number'"> 
-                            <label :for="feature.name">{{feature.description}} </label>
+                            <label :for="feature.name">
+                                <span class="text-warning">{{feature.name}} : </span>  
+                                {{feature.description}}  
+                            </label>
                             <input 
                                 :name="feature.name"
                                 type="number" class="form-control" :id="feature.name" 
                                 v-model="feature.value" :placeholder="`Enter ${feature.name}`"
-                                 min="0" required
+                                 :min="`${feature.min}`"  :max="`${feature.max}`" required
                             >
                             <span class="text-danger" v-if="feature.value < 0">Value can't be empty</span>
                         </div>
+
+
+
                         <div v-if="feature.type==='dropdown'"> 
+                            <span class="text-success">{{feature.name}} : </span>  
                             {{ feature.description }} 
                             <select v-model="feature.value" class="form-control" required>
                                 <option disabled value="">Please select one</option>
                                 <option v-for="(option, index) in featuresKeyValue[feature.name]" 
-                                    :key="index"   v-bind:value="option.value">
+                                    :key="index" v-bind:value="option.value">
                                     {{ option.text }}
                                 </option>
                             </select>
                         </div>
+
+
+
                         <div v-if="feature.type==='date'"> 
-                            <label :for="feature.name">{{feature.description}} </label>
+                            <label :for="feature.name">
+                                <span class="text-danger">{{feature.name}} :</span>  
+                                {{feature.description}} 
+                            </label>
                             <input 
                                 :name="feature.name"
                                 type="date" class="form-control" :id="feature.name" 
@@ -49,6 +62,7 @@
 
 <script>
 import _ from 'lodash';
+import axios from 'axios';
 import features from '../features';
 import featuresKeyValue from '../featuresKeyValue';
 import pythonMapValue from '../pythonMapValue';
@@ -96,15 +110,23 @@ export default {
             
 
 
-            const FinalOutput = [];
+            const FinalOutput = {};
             let i = 0;
-            _.map(finalValues, fv => {
+            _.map(finalValues, (fv, key) => {
                    // console.log(fv);
-                    FinalOutput[i] = isNaN(fv) ? 3 : parseInt( fv)
+                    FinalOutput[key] = isNaN(fv) ? 3 : parseInt( fv)
                     i++;
             });
 
             console.log('Final Output ===> ', FinalOutput);
+            //return; 
+            axios.post('http://127.0.0.1:5000/predict', FinalOutput)
+                .then(result => {
+                    console.log('Response Success ', result);
+                })
+                .catch(error => {
+                    console.log('Error ', error.response)
+                });
 
         },
         handleChange(event) {
