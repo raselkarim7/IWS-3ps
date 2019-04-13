@@ -57,26 +57,39 @@
             </form> 
             </div>
         </div> 
+        <ResultModal v-if="showModal" @close="showModal = false">
+            <h4 slot="header">Predicted output for this property:</h4>
+            <p :style="{fontSize: '22px'}" slot="body">{{predictedOutput}} Taka</p>
+        </ResultModal>
     </div>
 </template>
 
 <script>
 import _ from 'lodash';
 import axios from 'axios';
+import ResultModal from './ResultModal';
 import features from '../features';
 import featuresKeyValue from '../featuresKeyValue';
 import pythonMapValue from '../pythonMapValue';
+
 console.log('python map value === ', pythonMapValue);
 // console.log('featuresKeyValue === ', featuresKeyValue, featuresKeyValue['MSSubClass']);
 export default {
     name: 'AddProperty',
+    components: {
+        ResultModal,
+
+    },
     data() {
         return {
+            showModal: false,
             optKey: 0,
             features: features,
             featuresKeyValue: featuresKeyValue, 
             pythonMapValue: pythonMapValue,
             LotFrontage: '555',
+
+            predictedOutput: '',
         }
     }, 
     methods: {
@@ -88,9 +101,9 @@ export default {
                 formvalues[this.features[i].name] = this.features[i].value
                 //formValuesPlainArray[i] = isNaN(this.features[i].value) ? this.features[i].value : parseInt( this.features[i].value)
             }
-            //console.log('======', this.pythonMapValue['MSZoning'] );
-            //console.log(Object.prototype.hasOwnProperty.call( this.pythonMapValue, 'MSZoning'))
-            //console.log(formValuesPlainArray);
+            // console.log('======', this.pythonMapValue['MSZoning'] );
+            // console.log(Object.prototype.hasOwnProperty.call( this.pythonMapValue, 'MSZoning'))
+            // console.log(formValuesPlainArray);
             // alert(JSON.stringify(this.features));
             const finalValues = {};
             _.map(formvalues, (fv, key)  => {
@@ -123,6 +136,8 @@ export default {
             axios.post('http://127.0.0.1:5000/predict', FinalOutput)
                 .then(result => {
                     console.log('Response Success ', result);
+                    this.predictedOutput = parseFloat( result.data.sell_price).toFixed(2);
+                    this.showModal = true;
                 })
                 .catch(error => {
                     console.log('Error ', error.response)
